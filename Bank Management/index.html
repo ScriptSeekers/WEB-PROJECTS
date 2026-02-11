@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fas fa-university"></i>
+                <h2>Bank Manager</h2>
+            </div>
+
+            <div class="account-control">
+                <button id="add-account-btn" class="btn primary-btn">
+                    <i class="fas fa-plus"></i> New Account
+                </button>
+            </div>
+
+            <div class="accounts-list-container">
+                <h3>Accounts</h3>
+                <ul id="accounts-list">
+                    <!-- Accounts will be loaded here -->
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header>
+                <h1 id="page-title">Dashboard</h1>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=random" alt="Admin">
+                    <span>Admin</span>
+                </div>
+            </header>
+
+            <!-- Dashboard / Account Details -->
+            <div id="dashboard-view" class="view-section">
+                <!-- Welcome State -->
+                <div id="welcome-message" class="empty-state">
+                    <i class="fas fa-piggy-bank"></i>
+                    <h3>Select an account to manage</h3>
+                    <p>Or create a new one to get started.</p>
+                </div>
+
+                <!-- Account Details State -->
+                <div id="account-details" class="account-details hidden">
+                    <div class="account-header-card">
+                        <div class="acc-info">
+                            <h2 id="acc-name">John Doe</h2>
+                            <p id="acc-no">AC: 123456789</p>
+                        </div>
+                        <div class="acc-balance">
+                            <span>Available Balance</span>
+                            <h2 id="acc-balance">₹0.00</h2>
+                        </div>
+                        <div class="acc-actions">
+                            <button class="btn action-btn deposit" onclick="openTransactionModal('Deposit')">
+                                <i class="fas fa-arrow-down"></i> Deposit
+                            </button>
+                            <button class="btn action-btn withdraw" onclick="openTransactionModal('Withdrawal')">
+                                <i class="fas fa-arrow-up"></i> Withdraw
+                            </button>
+                            <button class="btn delete-btn" onclick="deleteCurrentAccount()">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="transactions-section">
+                        <h3>Transaction History</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-body">
+                                    <!-- Rows added dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Copyright Reserved to Arpit Vishwakarma aKa ScriptSeekers</p>
+    </footer>
+    </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Account Modal -->
+    <div id="add-account-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create New Account</h2>
+            <form id="add-account-form">
+                <div class="form-group">
+                    <label>Account Holder Name</label>
+                    <input type="text" id="new-acc-name" required placeholder="e.g. John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Account Number</label>
+                    <input type="text" id="new-acc-no" required placeholder="e.g. 1001">
+                </div>
+                <div class="form-group">
+                    <label>Initial Deposit (Optional)</label>
+                    <input type="number" id="new-acc-deposit" min="0" placeholder="0">
+                </div>
+                <button type="submit" class="btn primary-btn">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transaction Modal -->
+    <div id="transaction-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="transaction-title">Deposit Money</h2>
+            <form id="transaction-form">
+                <input type="hidden" id="txn-type">
+                <div class="form-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" id="txn-amount" required min="1" step="0.01" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="txn-desc" placeholder="e.g. Salary, Rent">
+                </div>
+                <button type="submit" class="btn primary-btn">Confirm <span id="txn-btn-text">Deposit</span></button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Password Strength</h2>
+        <div class="input-box">
+            <input type="password" id="password" placeholder="Type your password here..." autocomplete="off">
+            <i class="fas fa-eye" id="togglePassword"></i>
+        </div>
+
+        <div class="strength-meter">
+            <div class="strength-bar" id="strength-bar"></div>
+        </div>
+        <div class="strength-text" id="strength-text">Weak</div>
+
+        <ul class="requirements-list">
+            <li id="req-length"><i class="fas fa-circle"></i> At least 8 characters</li>
+            <li id="req-number"><i class="fas fa-circle"></i> At least 1 number (0-9)</li>
+            <li id="req-lowercase"><i class="fas fa-circle"></i> At least 1 lowercase letter (a-z)</li>
+            <li id="req-uppercase"><i class="fas fa-circle"></i> At least 1 uppercase letter (A-Z)</li>
+            <li id="req-symbol"><i class="fas fa-circle"></i> At least 1 special symbol (!@#$...)</li>
+        </ul>
+
+        <footer>
+            <p>&copy; 2026 Copyright Reserved to Arpit Vishwakarma aKa ScriptSeekers</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

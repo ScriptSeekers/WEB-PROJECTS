@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BMI Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="container" role="main">
+    <h1>BMI Calculator</h1>
+
+    <div class="input-group">
+      <label for="height-unit">Height</label>
+      <select id="height-unit" aria-label="Select height unit">
+        <option value="cm">Centimeters (cm)</option>
+        <option value="m">Meters (m)</option>
+        <option value="in">Inches (in)</option>
+        <option value="ft-in">Feet & Inches</option>
+      </select>
+      <div id="height-inputs">
+        <input type="number" id="height" min="0" step="any" aria-label="Height" placeholder="Enter height" />
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="weight-unit">Weight</label>
+      <input type="number" id="weight" min="0" step="any" aria-label="Weight" placeholder="Enter weight" />
+      <select id="weight-unit" aria-label="Select weight unit">
+        <option value="kg">Kilograms (kg)</option>
+        <option value="lbs">Pounds (lbs)</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" min="0" max="120" step="1" aria-label="Age" placeholder="Enter age" />
+    </div>
+
+    <button id="calculate-btn" aria-live="polite" aria-label="Calculate BMI">Calculate BMI</button>
+
+    <div id="result" class="result" aria-live="polite" aria-atomic="true" hidden></div>
+    <footer>
+      <p>&copy; 2026 Copyright Reserved to Arpit Vishwakarma aKa ScriptSeekers</p>
+    </footer>
+  </div>
+
+  <script>
+    const heightUnitSelect = document.getElementById('height-unit');
+    const heightInputsDiv = document.getElementById('height-inputs');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+
+    // Function to create feet and inches inputs
+    function createFeetInchesInputs() {
+      const container = document.createElement('div');
+      container.className = 'feet-inches-group';
+      const feetInput = document.createElement('input');
+      feetInput.type = 'number';
+      feetInput.min = 0;
+      feetInput.step = 1;
+      feetInput.id = 'height-feet';
+      feetInput.placeholder = 'Feet';
+      feetInput.setAttribute('aria-label', 'Height in feet');
+      const inchesInput = document.createElement('input');
+      inchesInput.type = 'number';
+      inchesInput.min = 0;
+      inchesInput.max = 11;
+      inchesInput.step = 1;
+      inchesInput.id = 'height-inches';
+      inchesInput.placeholder = 'Inches';
+      inchesInput.setAttribute('aria-label', 'Height in inches');
+      container.appendChild(feetInput);
+      container.appendChild(inchesInput);
+      return container;
+    }
+
+    // Update height input fields based on selected unit
+    function updateHeightInputs() {
+      const unit = heightUnitSelect.value;
+      heightInputsDiv.innerHTML = '';
+      if (unit === 'ft-in') {
+        // feet and inches inputs
+        heightInputsDiv.appendChild(createFeetInchesInputs());
+      } else {
+        // single number input
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 0;
+        input.step = 'any';
+        input.id = 'height';
+        input.placeholder = 'Enter height';
+        input.setAttribute('aria-label', 'Height');
+        heightInputsDiv.appendChild(input);
+      }
+    }
+
+    heightUnitSelect.addEventListener('change', () => {
+      updateHeightInputs();
+      resultDiv.hidden = true;
+      resultDiv.textContent = '';
+    });
+
+    // Initial call to set height inputs
+    updateHeightInputs();
+
+    // BMI Calculation logic
+    function calculateBMI(heightMeters, weightKg) {
+      if (heightMeters <= 0) return null;
+      return weightKg / (heightMeters * heightMeters);
+    }
+
+    // Categorize BMI value
+    function bmiCategory(bmi) {
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 24.9) return 'Normal weight';
+      if (bmi < 29.9) return 'Overweight';
+      return 'Obese';
+    }
+
+    // Convert user inputs to metric units for BMI calculation
+    function getHeightInMeters() {
+      const unit = heightUnitSelect.value;
+      if (unit === 'cm') {
+        const val = parseFloat(document.getElementById('height').value);
+        if (isNaN(val) || val <= 0) return null;
+        return val / 100; // cm to meters
+      }
+      if (unit === 'm') {
+        const val = parseFloat(document.getElementById('height').value);
+        if (isNaN(val) || val <= 0) return null;
+        return val;
+      }
+      if (unit === 'in') {
+        const val = parseFloat(document.getElementById('height').value);
+        if (isNaN(val) || val <= 0) return null;
+        return val * 0.0254; // inches to meters
+      }
+      if (unit === 'ft-in') {
+        const feet = parseInt(document.getElementById('height-feet').value);
+        const inches = parseInt(document.getElementById('height-inches').value);
+        if (isNaN(feet) || feet < 0) return null;
+        if (isNaN(inches) || inches < 0 || inches > 11) return null;
+        const totalInches = feet * 12 + inches;
+        if (totalInches === 0) return null;
+        return totalInches * 0.0254; // feet/inches to meters
+      }
+      return null;
+    }
+
+    function getWeightInKg() {
+      const weightVal = parseFloat(document.getElementById('weight').value);
+      const unit = document.getElementById('weight-unit').value;
+      if (isNaN(weightVal) || weightVal <= 0) return null;
+      if (unit === 'kg') {
+        return weightVal;
+      }
+      if (unit === 'lbs') {
+        return weightVal * 0.45359237; // pounds to kg
+      }
+      return null;
+    }
+
+    calculateBtn.addEventListener('click', () => {
+      resultDiv.hidden = true;
+      resultDiv.textContent = '';
+
+      const heightMeters = getHeightInMeters();
+      const weightKg = getWeightInKg();
+      const age = parseInt(document.getElementById('age').value);
+
+      if (!heightMeters) {
+        alert('Please enter a valid height.');
+        return;
+      }
+      if (!weightKg) {
+        alert('Please enter a valid weight.');
+        return;
+      }
+      if (isNaN(age) || age <= 0) {
+        alert('Please enter a valid age.');
+        return;
+      }
+
+      const bmi = calculateBMI(heightMeters, weightKg);
+      if (bmi === null || isNaN(bmi) || bmi <= 0) {
+        alert('Invalid inputs. Please re-check your entries.');
+        return;
+      }
+
+      const category = bmiCategory(bmi);
+
+      const bmiRounded = bmi.toFixed(2);
+
+      resultDiv.innerHTML = `
+      Your BMI is <strong>${bmiRounded}</strong>.<br />
+      Category: <span class="category">${category}</span>.
+    `;
+      resultDiv.hidden = false;
+    });
+  </script>
+
+</body>
+
+</html>
